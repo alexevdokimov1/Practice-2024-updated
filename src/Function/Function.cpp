@@ -3,19 +3,13 @@
 #include <cmath>
 #include "Function.h"
 
-double f(std::map <char, double>& values, double x) {
-    return (2 * values['a'] * x + values['b']) * (values['a'] * x * x + values['b'] * x + values['c'] - values['y']) + x - values['x'];
+double f(Equation& values, double x) {
+    return (2 * values.a * x + values.b) * (values.a * x * x + values.b * x + values.c - values.y0) + x - values.x0;
 }
 
 double calcEquation(double a, double b, double c, double x0_param, double y0_param, double left, double right, double eps)
 {
-    std::map <char, double> values{
-        {'a', a},
-        {'b', b},
-        {'c', c},
-        {'x', x0_param},
-        {'y', y0_param}
-    };
+    Equation values{a, b, c, x0_param, y0_param};
 
     if (std::abs(f(values, left)) < eps) return left;
     if (std::abs(f(values, right)) < eps) return right;

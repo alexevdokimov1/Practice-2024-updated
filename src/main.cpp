@@ -7,6 +7,8 @@
 #include "Approximation/Approximation.h"
 #include "FileOperations/FileOperations.h"
 
+#define eps 0.0001
+
 int main() {
     
     std::vector<std::vector<double>> experimental_values, calculated_values;
@@ -27,7 +29,7 @@ int main() {
     std::vector<double> x_sol, y_sol, z_sol;
     double x_del, y_del, z_del;
 
-    std::ofstream output("../data/Result.txt");
+    std::ofstream output("../build/Result.txt");
     if (!output) {
         std::cout << "Output file can not be created\n";
         return 0;
@@ -50,8 +52,8 @@ int main() {
                
 
                 x_closest =  calcEquation(x_sol[0], x_sol[1], x_sol[2], experimental_values[0][k], experimental_values[1][k], 
-                    calculated_values[1][i+1], calculated_values[1][i + 2], 0.001); //finding x closest
-               
+                    calculated_values[1][i+1], calculated_values[1][i + 2], eps); //finding x closest
+
                 y_closest = 0; //finding y based on y closest
                 for (int v = 0; v < y_sol.size(); v++)
                     y_closest += y_sol[v] * pow(x_closest, 2 - v);
