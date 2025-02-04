@@ -21,6 +21,8 @@
                 "${workspaceFolder}\\src\\FlowRead\\FlowRead.h",
                 "${workspaceFolder}\\src\\FlowRead\\FlowRead.cpp",
 
+                "${workspaceFolder}\\src\\Data\\Data.h",
+                "${workspaceFolder}\\src\\Data\\Data.cpp",
                 "-o",
                 "${workspaceFolder}\\build\\${fileBasenameNoExtension}.exe"
             ],

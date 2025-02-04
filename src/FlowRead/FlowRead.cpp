@@ -17,16 +17,12 @@ bool FlowRead::next(std::vector<Position>& positions, int n){
     double t, x, y, z;
     for(int i = 0; i < n; i++){
         if(std::getline(file, line)){
-            std::istringstream iss(line);
-            iss >> t >> x >> y >> z;
-            positions.push_back({t, x, y, z});
+            positions.push_back(Position::ParseLine(line));
         }
         else{
             file.seekg(current_pos);
             positions.clear();
             return false;
-
-
         }
     }
     file.seekg(current_pos);

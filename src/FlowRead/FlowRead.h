@@ -2,10 +2,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
-
-struct Position{
-    double t, x, y, z;
-};
+#include "../Data/Data.h"
 
 class FlowRead {
     private:
@@ -15,5 +12,4 @@ class FlowRead {
         bool next(std::vector<Position>& positions, int n=1);
         void reset();
         void skipLine();
-
 };

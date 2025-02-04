@@ -6,6 +6,7 @@
 #include "Function/Function.h"
 #include "Approximation/Approximation.h"
 #include "FlowRead/FlowRead.h"
+#include "Data/Data.h"
 
 #define eps 0.0001
 
@@ -46,7 +47,7 @@ int main() {
                     z_slice.push_back(pos.z);
                 }
                 
-                 x_sol = Approximate(time_slice, x_slice, 3); //approximation of x to time
+                x_sol = Approximate(time_slice, x_slice, 3); //approximation of x to time
                 y_sol = Approximate(x_slice, y_slice, 3); //approximation of y to x
                 z_sol = Approximate(x_slice, z_slice, 3); //approximation of z to x
                
@@ -72,7 +73,7 @@ int main() {
                 break;
 
             }
-            calculatedValueStream.skipLine();
+            else calculatedValueStream.skipLine();
         }
         realValueStream.skipLine();
     }
