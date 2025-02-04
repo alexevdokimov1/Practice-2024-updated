@@ -5,24 +5,18 @@
 #include <fstream> 
 #include "Function/Function.h"
 #include "Approximation/Approximation.h"
-#include "FileOperations/FileOperations.h"
+#include "FlowRead/FlowRead.h"
 
 #define eps 0.0001
 
 int main() {
-    
-    std::vector<std::vector<double>> experimental_values, calculated_values;
-    int experimental_values_count, calculated_values_count;
 
     try {
-        RetrieveData(experimental_values, experimental_values_count, "../data/Real.txt");
-        RetrieveData(calculated_values, calculated_values_count, "../data/Calculated.txt");
-    }
-    catch (std::exception& e)
-    {
-        std::cerr << "Exception:\t" << e.what() << '\n';
-        return 0;
-    }
+
+    std::vector<Position> realValues, calculatedValues;
+    
+    FlowRead realValueStream("../data/Real.txt");
+    FlowRead calculatedValueStream("../data/Calculated.txt");
 
     std::vector<double> time_slice, x_slice, y_slice, z_slice;
     double x_closest, y_closest, z_closest;
@@ -34,25 +28,32 @@ int main() {
         std::cout << "Output file can not be created\n";
         return 0;
     }
+    
+    std::vector<Position> real_positions;
+    while(realValueStream.next(real_positions)){
+        std::vector<Position> calculated_positions;
+        while(calculatedValueStream.next(calculated_positions, 4)){
+            if (real_positions[0].t > calculated_positions[1].t && real_positions[0].t < calculated_positions[2].t) {
+                time_slice.clear();
+                x_slice.clear();
+                y_slice.clear();
+                z_slice.clear();
 
-    int i_start = 0;
-    for (int k = 0; k < experimental_values_count; k++) { //except first and last to set interval
-        for (int i = i_start; i < calculated_values_count - 3; i++) {
-
-            if (calculated_values[0][i+1] < experimental_values[0][k] && experimental_values[0][k] < calculated_values[0][i + 2]) { //if time is in interval
-
-                time_slice = std::vector<double>(calculated_values[0].begin() + i, calculated_values[0].begin() + i + 4); //time slice
-                x_slice = std::vector<double>(calculated_values[1].begin() + i, calculated_values[1].begin() + i + 4); //x slice
-                y_slice = std::vector<double>(calculated_values[2].begin() + i, calculated_values[2].begin() + i + 4); //y slice
-                z_slice = std::vector<double>(calculated_values[3].begin() + i, calculated_values[3].begin() + i + 4); //z slice
+                for(const auto& pos : calculated_positions) {
+                    time_slice.push_back(pos.t);
+                    x_slice.push_back(pos.x);
+                    y_slice.push_back(pos.y);
+                    z_slice.push_back(pos.z);
+                }
                 
-                x_sol = Approximate(time_slice, x_slice, 3); //approximation of x to time
+                 x_sol = Approximate(time_slice, x_slice, 3); //approximation of x to time
                 y_sol = Approximate(x_slice, y_slice, 3); //approximation of y to x
                 z_sol = Approximate(x_slice, z_slice, 3); //approximation of z to x
                
 
-                x_closest =  calcEquation(x_sol[0], x_sol[1], x_sol[2], experimental_values[0][k], experimental_values[1][k], 
-                    calculated_values[1][i+1], calculated_values[1][i + 2], eps); //finding x closest
+                x_closest =  calcEquation(x_sol[0], x_sol[1], x_sol[2], real_positions[0].x, real_positions[0].y, 
+                    calculated_positions[1].x, calculated_positions[2].x, eps); //finding x closest
+
 
                 y_closest = 0; //finding y based on y closest
                 for (int v = 0; v < y_sol.size(); v++)
@@ -62,20 +63,27 @@ int main() {
                 for (int v = 0; v < z_sol.size(); v++)
                     z_closest += z_sol[v] * pow(x_closest, 2 - v);
 
-                x_del = std::abs(x_closest - experimental_values[1][k]);
-                y_del = std::abs(y_closest - experimental_values[2][k]);
-                z_del = std::abs(z_closest - experimental_values[3][k]);
+                x_del = std::abs(x_closest - real_positions[0].x);
+                y_del = std::abs(y_closest - real_positions[0].y);
+                z_del = std::abs(z_closest - real_positions[0].z);
 
-                output << experimental_values[0][k] << "\t" << x_del << "\t" << y_del << "\t" << z_del << "\n";
 
-                if(i>4)i_start = i - 4;
-
+                output << real_positions[0].t << "\t" << x_del << "\t" << y_del << "\t" << z_del << "\n";
                 break;
-            }      
+
+            }
+            calculatedValueStream.skipLine();
         }
+        realValueStream.skipLine();
     }
 
     output.close();
 
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "Exception:\t" << e.what() << '\n';
+        return 0;
+    }
     return 0;
 }

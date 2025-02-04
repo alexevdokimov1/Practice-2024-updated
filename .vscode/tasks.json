@@ -14,12 +14,12 @@
 
                 "${workspaceFolder}\\src\\Approximation\\Approximation.h",
                 "${workspaceFolder}\\src\\Approximation\\Approximation.cpp",
-
-                "${workspaceFolder}\\src\\FileOperations\\FileOperations.h",
-                "${workspaceFolder}\\src\\FileOperations\\FileOperations.cpp",
                 
                 "${workspaceFolder}\\src\\Gaus\\Gaus.h",
                 "${workspaceFolder}\\src\\Gaus\\Gaus.cpp",
+
+                "${workspaceFolder}\\src\\FlowRead\\FlowRead.h",
+                "${workspaceFolder}\\src\\FlowRead\\FlowRead.cpp",
 
                 "-o",
                 "${workspaceFolder}\\build\\${fileBasenameNoExtension}.exe"
