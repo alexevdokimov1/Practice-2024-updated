@@ -17,7 +17,7 @@ bool FlowRead::next(std::vector<Position>& positions, int n){
     double t, x, y, z;
     for(int i = 0; i < n; i++){
         if(std::getline(file, line)){
-            positions.push_back(Position::ParseLine(line));
+            positions.push_back(Position::parseLine(line));
         }
         else{
             file.seekg(current_pos);

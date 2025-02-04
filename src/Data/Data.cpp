@@ -1,6 +1,7 @@
 #include "Data.h"
+#include <iostream>
 
-Position Position::ParseLine(std::string line){
+Position Position::parseLine(std::string line){
     std::stringstream ss(line);
     double t, x, y, z;
     ss >> t >> x >> y >> z;

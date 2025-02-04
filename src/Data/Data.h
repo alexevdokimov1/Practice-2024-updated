@@ -5,5 +5,5 @@
 struct Position{
     double t, x, y, z;
 
-    static Position ParseLine(std::string line);
+    static Position parseLine(std::string line);
 };

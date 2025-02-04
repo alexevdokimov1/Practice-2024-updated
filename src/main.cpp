@@ -13,8 +13,6 @@
 int main() {
 
     try {
-
-    std::vector<Position> realValues, calculatedValues;
     
     FlowRead realValueStream("../data/Real.txt");
     FlowRead calculatedValueStream("../data/Calculated.txt");
@@ -67,7 +65,6 @@ int main() {
                 x_del = std::abs(x_closest - real_positions[0].x);
                 y_del = std::abs(y_closest - real_positions[0].y);
                 z_del = std::abs(z_closest - real_positions[0].z);
-
 
                 output << real_positions[0].t << "\t" << x_del << "\t" << y_del << "\t" << z_del << "\n";
                 break;
