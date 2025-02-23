@@ -2,7 +2,7 @@
 #include <vector>
 #include <exception> 
 #include <cmath>
-#include <fstream> 
+#include <iomanip>
 #include "Function/Function.h"
 #include "Approximation/Approximation.h"
 #include "FlowRead/FlowRead.h"
@@ -27,7 +27,7 @@ int main() {
         std::cout << "Output file can not be created\n";
         return 0;
     }
-    
+
     std::vector<Position> real_positions;
     while(realValueStream.next(real_positions)){
         std::vector<Position> calculated_positions;
@@ -66,15 +66,19 @@ int main() {
                 y_del = std::abs(y_closest - real_positions[0].y);
                 z_del = std::abs(z_closest - real_positions[0].z);
 
-                output << real_positions[0].t << "\t" << x_del << "\t" << y_del << "\t" << z_del << "\n";
+                output << std::fixed << std::setprecision(3)  
+                << real_positions[0].t 
+                << std::setw(15) << x_del 
+                << std::setw(15) << y_del 
+                << std::setw(15) << z_del << '\n';
                 break;
-
             }
             else calculatedValueStream.skipLine();
         }
         realValueStream.skipLine();
     }
 
+    std::cout << "Output file size: " << output.tellp() << " bytes\n";
     output.close();
 
     }
